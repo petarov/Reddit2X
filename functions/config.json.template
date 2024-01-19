@@ -1,0 +1,12 @@
+{
+    "firebase": {
+        "collectionName": ""
+    },
+    "reddit": {
+        "subreddit": "",
+        "maxPosts": 50,        
+        "clientId": "",
+        "clientSecret": "",
+        "refreshToken": ""
+    }
+}
