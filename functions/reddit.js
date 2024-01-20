@@ -64,33 +64,34 @@ async function downloadPosts(cfg) {
         return false;
     })
     .map(post => ({
-      id: post.name,
+      nid: post.name,
       title: post.title,
-      url: post.url,
+      created_at: post.created_utc,
       author: post.author.name,
+      url: post.url,
       flair: post.link_flair_text,
       ups: post.ups,
+      is_on_x: false,
     }));
-
-    logger.log(`${formattedPosts.length} reddit posts ready for saving`);
 
     return formattedPosts;
 }
 
 exports.fetchandstoreredditposts = async (config, event) => {
-    logger.log('**** downloading reddit posts');
+    logger.log('--- downloading reddit posts');
 
     try {
         await updateDb(await downloadPosts(config.reddit), config.firebase);
     } catch (error) {
-        logger.error('Error fetching and storing Reddit posts:', error);
+        logger.error('Error downloading and storing reddit posts:', error);
     }
 
     return null;
 };
 
-// // --- TEST ---
+// --- TEST ---
 // (async function () {
 //     const config = require('./config.json');
 //     const p = await downloadPosts(config.reddit);
+//     p.forEach(p => console.log(p.title));
 // })();
