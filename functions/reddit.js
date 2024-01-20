@@ -7,7 +7,7 @@ const UserAgent = require('user-agents');
 admin.initializeApp();
 
 async function updateDb(posts, cfg) {
-    logger.log(`Saving ${posts.length} reddit posts...`);
+    logger.info(`Saving ${posts.length} reddit posts...`);
 
     const { firebase, reddit } = cfg;
 
@@ -47,7 +47,7 @@ async function downloadPosts(cfg) {
     const posts = await snoowrap.getSubreddit(reddit.subreddit)
         .getNew({ limit: reddit.maxPosts });
 
-    logger.log(`${posts.length} reddit posts fetched`);
+    logger.info(`${posts.length} reddit posts fetched`);
 
     const formattedPosts = posts
         // .reduce((prev, post) => {
@@ -93,7 +93,7 @@ async function downloadPosts(cfg) {
 }
 
 exports.downloadandsave = async (config, event) => {
-    logger.log('--- downloading reddit posts');
+    logger.debug('--- downloading reddit posts');
 
     try {
         await updateDb(await downloadPosts(config), config);

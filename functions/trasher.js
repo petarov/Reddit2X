@@ -2,7 +2,7 @@ const { logger } = require("firebase-functions");
 const admin = require('firebase-admin');
 
 exports.deleteoldposts = async (config, event) => {
-    logger.log('--- removing old reddit posts from db');
+    logger.debug('--- removing old reddit posts from db');
 
     try {
         const { firebase } = config;

@@ -8,9 +8,10 @@ const config = require('./config.json');
 exports.redditdownloadandsave = onSchedule("*/5 * * * *", 
     async (event) => reddit.downloadandsave(config, event));
 
-// --- runs every 5 minutes
-//exports.publishxposts = x.publishxcrap;
+// --- runs every 3 minutes
+exports.xpublish =  onSchedule("*/3 * * * *", 
+    async (event) => x.publishxcrap(config, event));
 
-// --- runs every 5 minutes
-exports.trasherdeleteoldposts =  onSchedule("*/3 * * * *", 
+// --- runs every hour
+exports.trasherdeleteoldposts = onSchedule("0 * * * *", 
     async (event) => trasher.deleteoldposts(config, event));
