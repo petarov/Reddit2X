@@ -1,4 +1,3 @@
-const { onSchedule } = require("firebase-functions/v2/scheduler");
 const { logger } = require("firebase-functions");
 const { log } = require("firebase-functions/logger");
 const admin = require('firebase-admin');
@@ -10,7 +9,7 @@ admin.initializeApp();
 async function updateDb(posts, cfg) {
     logger.log(`Saving ${posts.length} reddit posts...`);
 
-    const {firebase, reddit} = cfg;
+    const { firebase, reddit } = cfg;
 
     const db = admin.firestore();
     const redditPostsRef = db.collection(firebase.collectionName);
@@ -18,8 +17,9 @@ async function updateDb(posts, cfg) {
     // filter posts that were already added
     const existingIds = new Set();
     const existingPosts = await redditPostsRef
-        .orderBy('created_at', 'desc')
-        .limit(reddit.maxPosts).get();
+        .orderBy('timestamp', 'desc')
+        .limit(reddit.maxPosts + 1)
+        .get();
 
     existingPosts.forEach(doc => existingIds.add(doc.data().nid));
 
@@ -28,14 +28,14 @@ async function updateDb(posts, cfg) {
         if (existingIds.has(post.nid)) {
             logger.debug(`Skipped: already added: (${post.nid}) ${post.title}`);
         } else {
+            post.timestamp = admin.firestore.FieldValue.serverTimestamp();
             redditPostsRef.add(post);
         }
     });
 }
 
 async function downloadPosts(cfg) {
-    const {reddit} = cfg;
-    console.log(cfg, reddit)
+    const { reddit } = cfg;
 
     const snoowrap = new Snoowrap({
         userAgent: new UserAgent({ platform: 'Win32' }).toString(),
@@ -105,8 +105,8 @@ exports.fetchandstoreredditposts = async (config, event) => {
 };
 
 // --- TEST ---
-(async function () {
-    const config = require('./config.json');
-    const p = await downloadPosts(config);
-    p.forEach(p => console.log(p.title));
-})();
+// (async function () {
+//     const config = require('./config.json');
+//     const p = await downloadPosts(config);
+//     p.forEach(p => console.log(p.title));
+// })();

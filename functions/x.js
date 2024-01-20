@@ -7,6 +7,7 @@ exports.publishxcrap = (event) => {
     try {
         // const posts = downloadPosts();
         // updateDb(posts);
+        
     } catch (error) {
         logger.error('Error publishing to X:', error);
     }
