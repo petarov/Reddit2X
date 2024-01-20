@@ -92,7 +92,7 @@ async function downloadPosts(cfg) {
     return formattedPosts;
 }
 
-exports.fetchandstoreredditposts = async (config, event) => {
+exports.downloadandsave = async (config, event) => {
     logger.log('--- downloading reddit posts');
 
     try {
