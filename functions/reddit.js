@@ -1,7 +1,7 @@
 const { onSchedule } = require("firebase-functions/v2/scheduler");
 const { logger } = require("firebase-functions");
+const { log } = require("firebase-functions/logger");
 const admin = require('firebase-admin');
-const fetch = require('node-fetch');
 const Snoowrap = require('snoowrap');
 const UserAgent = require('user-agents');
 
@@ -10,27 +10,42 @@ admin.initializeApp();
 async function updateDb(posts, cfg) {
     logger.log(`Saving ${posts.length} reddit posts...`);
 
+    const {firebase, reddit} = cfg;
+
     const db = admin.firestore();
-    const redditPostsRef = db.collection(cfg.collectionName);
+    const redditPostsRef = db.collection(firebase.collectionName);
 
-    // Delete existing documents in the collection
-    const deleteQuery = await redditPostsRef.get();
-    deleteQuery.forEach(doc => doc.ref.delete());
+    // filter posts that were already added
+    const existingIds = new Set();
+    const existingPosts = await redditPostsRef
+        .orderBy('created_at', 'desc')
+        .limit(reddit.maxPosts).get();
 
-    // Add the latest posts to the collection
-    posts.forEach(post => redditPostsRef.add(post));
+    existingPosts.forEach(doc => existingIds.add(doc.data().nid));
+
+    // add only the new ones to firebase
+    posts.forEach(post => {
+        if (existingIds.has(post.nid)) {
+            logger.debug(`Skipped: already added: (${post.nid}) ${post.title}`);
+        } else {
+            redditPostsRef.add(post);
+        }
+    });
 }
 
 async function downloadPosts(cfg) {
-    const reddit = new Snoowrap({
+    const {reddit} = cfg;
+    console.log(cfg, reddit)
+
+    const snoowrap = new Snoowrap({
         userAgent: new UserAgent({ platform: 'Win32' }).toString(),
-        clientId: cfg.clientId,
-        clientSecret: cfg.clientSecret,
-        refreshToken: cfg.refreshToken
+        clientId: reddit.clientId,
+        clientSecret: reddit.clientSecret,
+        refreshToken: reddit.refreshToken
     });
 
-    const posts = await reddit.getSubreddit(cfg.subreddit)
-        .getNew({ limit: cfg.maxPosts });
+    const posts = await snoowrap.getSubreddit(reddit.subreddit)
+        .getNew({ limit: reddit.maxPosts });
 
     logger.log(`${posts.length} reddit posts fetched`);
 
@@ -51,28 +66,28 @@ async function downloadPosts(cfg) {
         //     }
         //     return {};
         // }, []);
-    .filter(post => {
-        if (post.upvote_ratio >= cfg.minUpvoteRatio) {
-            if (post.ups >= cfg.minUpvotes) {
-                return true;
+        .filter(post => {
+            if (post.upvote_ratio >= reddit.minUpvoteRatio) {
+                if (post.ups >= reddit.minUpvotes) {
+                    return true;
+                } else {
+                    logger.info(`Skipped: upvotes ${post.ups} < ${reddit.minUpvotes}: ${post.title}`);
+                }
             } else {
-                logger.info(`Skipped: upvotes ${post.ups} < ${cfg.minUpvotes}: ${post.title}`);
+                logger.info(`Skipped: ratio ${post.upvote_ratio} < ${reddit.minUpvoteRatio}: ${post.title}`);
             }
-        } else {
-            logger.info(`Skipped: ratio ${post.upvote_ratio} < ${cfg.minUpvoteRatio}: ${post.title}`);
-        }
-        return false;
-    })
-    .map(post => ({
-      nid: post.name,
-      title: post.title,
-      created_at: post.created_utc,
-      author: post.author.name,
-      url: post.url,
-      flair: post.link_flair_text,
-      ups: post.ups,
-      is_on_x: false,
-    }));
+            return false;
+        })
+        .map(post => ({
+            nid: post.name,
+            title: post.title,
+            created_at: post.created_utc,
+            author: post.author.name,
+            url: post.url,
+            flair: post.link_flair_text,
+            ups: post.ups,
+            is_on_x: false,
+        }));
 
     return formattedPosts;
 }
@@ -81,7 +96,7 @@ exports.fetchandstoreredditposts = async (config, event) => {
     logger.log('--- downloading reddit posts');
 
     try {
-        await updateDb(await downloadPosts(config.reddit), config.firebase);
+        await updateDb(await downloadPosts(config), config);
     } catch (error) {
         logger.error('Error downloading and storing reddit posts:', error);
     }
@@ -90,8 +105,8 @@ exports.fetchandstoreredditposts = async (config, event) => {
 };
 
 // --- TEST ---
-// (async function () {
-//     const config = require('./config.json');
-//     const p = await downloadPosts(config.reddit);
-//     p.forEach(p => console.log(p.title));
-// })();
+(async function () {
+    const config = require('./config.json');
+    const p = await downloadPosts(config);
+    p.forEach(p => console.log(p.title));
+})();
