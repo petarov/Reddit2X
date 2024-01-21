@@ -1,5 +1,4 @@
 const { logger } = require("firebase-functions");
-const { log } = require("firebase-functions/logger");
 const admin = require('firebase-admin');
 
 exports.publishxcrap = async (config, event) => {
@@ -20,12 +19,12 @@ exports.publishxcrap = async (config, event) => {
             // TODO:
             // await unposted.ref.update({ is_on_x: true });
 
-            console.debug('*** publishing X post:', unposted.data());
+            logger.debug('*** publishing X post:', unposted.data());
         } else {
-            console.info('Nothing to post');
+            logger.info('Nothing to post');
         }
     } catch (error) {
-        console.error('Error publishing on x:', error);
+        logger.error('Error publishing on x:', error);
     }
 
     return null;
