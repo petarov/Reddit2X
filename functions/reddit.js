@@ -96,7 +96,10 @@ exports.downloadandsave = async (config, event) => {
     logger.debug('--- downloading reddit posts');
 
     try {
-        await updateDb(await downloadPosts(config), config);
+        await updateDb(
+            await downloadPosts(config),
+            config
+        );
     } catch (error) {
         logger.error('Error downloading and storing reddit posts:', error);
     }
