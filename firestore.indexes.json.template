@@ -1,0 +1,19 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "<collection-name>",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "is_on_x",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "created_at",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
