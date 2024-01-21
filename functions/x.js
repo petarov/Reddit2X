@@ -12,7 +12,7 @@ exports.publishxcrap = async (config, event) => {
         const redditPostsRef = db.collection(firebase.collectionName);
 
         // Query unreposted Reddit posts ordered by timestamp (oldest first)
-        const postsQuery = await redditPostsRef.where('is_on_x', '==', false).orderBy('timestamp').limit(1).get();
+        const postsQuery = await redditPostsRef.where('is_on_x', '==', false).orderBy('created_at').limit(1).get();
 
         if (!postsQuery.empty) {
             const unposted = postsQuery.docs[0];
