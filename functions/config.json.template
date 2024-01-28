@@ -12,9 +12,9 @@
         "refreshToken": ""
     },
     "twitter": {
-        "consumer_key": "",
-        "consumer_secret": "",
-        "access_token_key": "",
-        "access_token_secret": ""
+        "clientId": "",
+        "clientSecret": "",
+        "accessToken": "",
+        "refreshToken": ""
     }
 }
