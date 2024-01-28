@@ -83,7 +83,7 @@ async function downloadPosts(cfg) {
             title: post.title,
             created_at: post.created_utc,
             author: post.author.name,
-            url: post.url,
+            permalink: post.permalink,
             flair: post.link_flair_text,
             ups: post.ups,
             is_on_x: false,
