@@ -19,6 +19,7 @@ async function doPost(config) {
 
     if (xDoc.exists) {
         xSettings = xDoc.data();
+        logger.debug('*** xDoc.data', xSettings);
     } else {
         xSettings = twitter;
         await xRef.set(twitter);
@@ -34,7 +35,7 @@ async function doPost(config) {
         xAccessToken = accessToken;
     } else {
         // use current access token from storage
-        xAccessToken = xDoc.data().accessToken;
+        xAccessToken = xSettings.accessToken;
     }
 
     // query unreposted Reddit posts ordered by timestamp (oldest first)
