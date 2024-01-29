@@ -42,12 +42,15 @@ app.get('/callback', async (req, res) => {
                 console.log('Here are your tokens:');
                 console.log('-----------------');
                 console.log(`accessToken: ${accessToken}`);
-                console.log(`accessToken expiry: ${expiresIn}`);
                 console.log(`refreshToken: ${refreshToken}`);
+                console.log(`accessTokenCreateTime: ${Date.now()}`);
+                console.log(`accessTokenExpiresIn: ${expiresIn}`);
                 console.log('-----------------');
 
                 const { data } = await loggedClient.v2.me();
-                console.log(data);
+                console.debug('test /me', data);
+
+                res.status(200).send('OK');
             })
             .catch((e) => {
                 console.error(e);
