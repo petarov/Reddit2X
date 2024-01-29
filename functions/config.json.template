@@ -1,6 +1,8 @@
 {
     "firebase": {
-        "collectionName": ""
+        "collectionName": "mycol",
+        "subCollectionName": "mycol-config",
+        "postTTLDays": 90
     },
     "reddit": {
         "subreddit": "",

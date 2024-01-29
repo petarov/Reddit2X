@@ -117,12 +117,3 @@ exports.publishxcrap = async (config, event) => {
 
     return null;
 };
-
-// --- TEST ---
-// (async function () {
-//     const config = require('./config.json');
-//     // await refreshXToken(config, async (accessToken, refreshToken) => {
-//     //     console.log('*** NEW TOKENS ', accessToken, refreshToken);
-//     // });
-//     await doX({ title: 'Народе??', permalink: 'https://www.reddit.com/r/bulgariaeu/comments/19eijam/народе/' }, config);
-// })();

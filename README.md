@@ -1,7 +1,7 @@
 Reddit2X
 ==========================
 
-Publish (sync) `Reddit` subreddit posts on `X (Twitter)` using a Firebase function.
+Publish (sync) `Reddit` subreddit posts on `X (Twitter)` using Firebase functions
 
 # Setup
 
@@ -30,7 +30,13 @@ An index is required. You can check the `firestore.indexes.json` file or create 
 
 ## Reddit
 
-TODO
+Create a new app and add the client id, key and refresh token to your `config.json`.
+
+You can use the [Reddit OAuth Helper](https://not-an-aardvark.github.io/reddit-oauth-helper/) to generate your refresh token.
+
+See [reddit.com/wiki/api](https://www.reddit.com/wiki/api/) for more details.
+
+TODO: [Refresh tokens validity?](https://www.reddit.com/r/redditdev/comments/kvzaot/oauth2_api_changes_upcoming/)
 
 ## Twitter
 

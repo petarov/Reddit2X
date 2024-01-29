@@ -1,7 +1,6 @@
 const express = require('express');
 const session = require('express-session');
 const { TwitterApi } = require('twitter-api-v2');
-// const open = require('open');
 const config = require('./config.json');
 
 const app = express();
@@ -74,9 +73,6 @@ app.listen(port, () => {
     });
     const { url, codeVerifier, state } = client.generateOAuth2AuthLink(
         CALLBACK_URL, { scope: ['tweet.read', 'tweet.write', 'users.read', 'offline.access'] });
-    //   const { redirect_url } = await client.getRequestToken({
-    //     callback: `http://localhost:${port}/callback`,
-    //   });
     STORAGE.codeVerifier = codeVerifier;
     STORAGE.sessionState = state;
     console.log('Write these down:');

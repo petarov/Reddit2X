@@ -107,10 +107,3 @@ exports.downloadandsave = async (config, event) => {
 
     return null;
 };
-
-// --- TEST ---
-// (async function () {
-//     const config = require('./config.json');
-//     const p = await downloadPosts(config);
-//     p.forEach(p => console.log(p.title));
-// })();
