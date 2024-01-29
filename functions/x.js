@@ -19,19 +19,26 @@ async function doPost(config) {
 
     if (xDoc.exists) {
         xSettings = xDoc.data();
-        logger.debug('*** xDoc.data', xSettings);
     } else {
         xSettings = twitter;
         await xRef.set(twitter);
-        logger.info('Updated x settings');
+        logger.info('Saved x settings from config.json');
     }
 
     const result = await refreshXToken(xSettings);
     if (result.updated) {
         // update expired access token and refresh token
-        const { accessToken, refreshToken } = result;
+        const { accessToken,
+            refreshToken,
+            accessTokenCreateTime,
+            accessTokenExpiresIn } = result;
         logger.info('Saving new x access and refresh tokens...');
-        await xRef.update({ accessToken, refreshToken });
+        await xRef.update({
+            accessToken,
+            refreshToken,
+            accessTokenCreateTime,
+            accessTokenExpiresIn
+        });
         xAccessToken = accessToken;
     } else {
         // use current access token from storage
@@ -70,28 +77,33 @@ async function doX(post, accessToken) {
 
 async function refreshXToken(xSettings) {
     const { accessTokenCreateTime, accessTokenExpiresIn } = xSettings;
-    let updated = false;
 
     const now = Date.now();
-    const then = accessTokenCreateTime + accessTokenExpiresIn * 1000;
+    // X sucks! See https://devcommunity.x.com/t/refresh-token-expiring-with-offline-access-scope/168899?page=3
+    const then = accessTokenCreateTime + (accessTokenExpiresIn / 2) * 1000;
 
     if (then < now) {
-        logger.info(`X access token (${accessTokenExpiresIn}) has expired. Refreshing...`);
-
         const { clientId, clientSecret, refreshToken } = xSettings;
         const client = new TwitterApi({ clientId, clientSecret });
 
-        const { client: refreshedClient, accessToken, refreshToken: newRefreshToken } =
+        logger.info(`X access token (${accessTokenExpiresIn}) has expired. Refreshing using ${refreshToken.substring(0, 7)}...`);
+
+        const { client: refreshedClient, accessToken, refreshToken: newRefreshToken, expiresIn } =
             await client.refreshOAuth2Token(refreshToken);
 
         console.debug(`New access token obtained: ${accessToken.substring(0, 7)}...`);
-        console.debug(`New refresh token obtained: ${refreshToken.substring(0, 7)}...`);
+        console.debug(`New refresh token obtained: ${newRefreshToken.substring(0, 7)}...`);
 
-        updated = true;
-        return { updated, accessToken, refreshToken };
+        return {
+            updated: true,
+            accessToken,
+            refreshToken: newRefreshToken,
+            accessTokenCreateTime: now,
+            accessTokenExpiresIn: expiresIn
+        };
     }
 
-    return { updated };
+    return { updated: false };
 }
 
 exports.publishxcrap = async (config, event) => {
