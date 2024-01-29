@@ -27,6 +27,7 @@ async function updateDb(posts, cfg) {
     posts.forEach(post => {
         if (existingIds.has(post.nid)) {
             logger.debug(`Skipped: already added: (${post.nid}) ${post.title}`);
+            // TODO: update flair, upvotes count, etc. if not yet published
         } else {
             post.timestamp = admin.firestore.FieldValue.serverTimestamp();
             redditPostsRef.add(post);
