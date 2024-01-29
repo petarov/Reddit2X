@@ -2,7 +2,7 @@ const { logger } = require("firebase-functions");
 const admin = require('firebase-admin');
 const { TwitterApi } = require('twitter-api-v2')
 
-async function getPost(config) {
+async function doPost(config) {
     const { firebase, reddit } = config;
 
     const db = admin.firestore();
@@ -13,13 +13,15 @@ async function getPost(config) {
 
     if (!postsQuery.empty) {
         const unposted = postsQuery.docs[0];
+        const post = unposted.data();
 
-        // TODO:
-        // await unposted.ref.update({ is_on_x: true });
+        logger.debug(`Found something to post on X`, post);
+        await doX(post, config);
 
-        logger.debug('Found something to post to X:', unposted.data());
+        // mark as posted
+        await unposted.ref.update({ is_on_x: true });
 
-        return unposted.data();
+        return post;
     } else {
         logger.info('Nothing to post');
     }
@@ -30,21 +32,18 @@ async function getPost(config) {
 async function doX(post, config) {
     const { firebase, twitter } = config;
 
-    logger.debug('Crapping on X...');
+    logger.info(`Crapping on X: ${post.permalink}`);
 
-    const client = new TwitterApi(twitter);
+    const client = new TwitterApi(twitter.accessToken);
 
-    await client.v1.tweet(`${post.title} ${post.url}`);
+    await client.v2.tweet(`${post.title} https://reddit.com${post.permalink}`);
 }
 
 exports.publishxcrap = async (config, event) => {
     logger.debug('**** publishing on x');
 
     try {
-        await doX(
-            await getPost(config), 
-            config
-        );
+        await doPost(config);
     } catch (error) {
         logger.error('Error publishing on x:', error);
     }
@@ -52,4 +51,3 @@ exports.publishxcrap = async (config, event) => {
     return null;
 };
 
-// --- TEST ---
