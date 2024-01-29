@@ -47,10 +47,10 @@ TODO
 There are 3 functions in total:
 
   - `xpublish`: publishes new x post
-  - `redditdownloadandsave`: downloads the last N posts from Reddit and saves the new ones to firebase as `unpublished`
-  - `trasherdeleteoldposts`: removes old reddit posts from firebase to save on space
+  - `redditdownloadandsave`: downloads the last `reddit.maxPosts` posts from Reddit and saves the new ones to Firebase as *unpublished*
+  - `trasherdeleteoldposts`: removes old reddit posts from Firebase to save on space
 
-To deploy the functions to firebase run:
+To deploy the functions to Firebase run:
 
     firebase deploy --only functions
 
