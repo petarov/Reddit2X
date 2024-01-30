@@ -18,7 +18,7 @@ async function updateDb(posts, cfg) {
     const existingIds = new Set();
     const existingPosts = await redditPostsRef
         .orderBy('timestamp', 'desc')
-        .limit(reddit.maxPosts + 1)
+        .limit(reddit.maxPosts * 2)
         .get();
 
     existingPosts.forEach(doc => existingIds.add(doc.data().nid));
