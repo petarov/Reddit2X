@@ -14,6 +14,7 @@
         "refreshToken": ""
     },
     "twitter": {
+        "maxPostLen": 140,
         "clientId": "",
         "clientSecret": "",
         "accessToken": "",

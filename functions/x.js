@@ -53,9 +53,7 @@ async function doPost(config) {
         const post = unposted.data();
 
         logger.debug(`Found something to post on X`, post);
-
-        const xDoc = await xRef.get();
-        await doX(post, xAccessToken);
+        await doX(post, twitter.maxPostLen, xAccessToken);
 
         // mark as posted
         await unposted.ref.update({ is_on_x: true });
@@ -68,11 +66,20 @@ async function doPost(config) {
     return null;
 }
 
-async function doX(post, accessToken) {
+async function doX(post, maxPostLen, accessToken) {
     logger.info(`Crapping on X: ${post.permalink}`);
 
     const client = new TwitterApi(accessToken);
-    await client.v2.tweet(`${post.title} https://reddit.com${post.permalink}`);
+
+    const link = `https://reddit.com${post.permalink}`;
+
+    if (post.title.length + link.length > maxPostLen) {
+        title = post.title.substring(0, Math.max(0, post.title.length - link.length - 4)) + ' ...';
+    } else {
+        title = post.title;
+    }
+
+    await client.v2.tweet(`${title} ${link}`);
 }
 
 async function refreshXToken(xSettings) {
