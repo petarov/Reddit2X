@@ -1,4 +1,9 @@
 {
+    "cron": {
+        "x": "*/30 * * * *",
+        "reddit": "0 */1 * * *",
+        "cleanup": "0 0 * * 0"
+    },
     "firebase": {
         "collectionName": "mycol",
         "subCollectionName": "mycol-config",

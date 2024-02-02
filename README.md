@@ -17,6 +17,8 @@ There are 3 functions in total:
 
 Go to `./functions` in the repo and copy `config.json.template` to `config.json`.
 
+Configure the [cron schedule](https://crontab.guru) for each function under `cron` or just leave the defaults.
+
 ## Firebase
 
 Go to [console.firebase.google.com](https://console.firebase.google.com) and create a new project.
