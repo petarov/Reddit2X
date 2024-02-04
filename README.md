@@ -1,7 +1,7 @@
 Reddit2X
 ==========================
 
-Auto-syncs posts from a `Reddit` subreddit to `X (Twitter)` using Firebase functions
+Auto-syncs posts from a `Reddit` subreddit to `X (Twitter)` or _Xwitter_ using Firebase functions
 
 # How does it work?
 
@@ -55,9 +55,19 @@ Use the [Reddit OAuth Helper](https://not-an-aardvark.github.io/reddit-oauth-hel
 
 TODO: [Refresh tokens validity?](https://www.reddit.com/r/redditdev/comments/kvzaot/oauth2_api_changes_upcoming/)
 
-## Twitter
+## Xwitter
 
-TODO
+Xwitter is a real bummer to set up. You need to use the new OAuth 2.0 authentication scheme to get an access token that is only valid for about 2 hours. You will also get a refresh token with which you can get a new access token. 
+
+Go to [developer.twitter.com/](https://developer.twitter.com/) and create a new app. 
+
+Go to `User authentication settings` in the app and make sure the `Type of App` is set to `Web App, Automated App or Bot`. Add `http://localhost:3000/callback` to fill in the `http://localhost:3000/callback` in the `App Info` section.
+
+Go to `Keys and tokens` in the app ane generate your `OAuth 2.0 Client ID and Client Secret`. Copy those two to your `config.json` file.
+
+Run `node x-auth.js` to initiate the access and refresh tokens generation process. Check the messages in the CLI on how to proceed. You'll need to manually open the url presented in the console to approve your app at Xwitter. After that Xwitter will call the `localhost` url above to send back the tokens. This means, you'll need to return to the console and copy the `accessToken`, `refreshToken`, `accessTokenCreateTime` and `accessTokenExpiresIn` to your `config.json` file to finish the setup.
+
+Note: The `xpublish` function checks for the validity of the access token before posting, however be advised that you should not post in intervals bigger than 2 hours. There seems to be a bug at Xwitter that prevents refresh tokens from working after the access token has expired.
 
 # Deploy
 
