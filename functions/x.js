@@ -2,6 +2,9 @@ const { logger } = require("firebase-functions");
 const admin = require('firebase-admin');
 const { TwitterApi } = require('twitter-api-v2');
 
+// https://help.twitter.com/en/using-x/how-to-post-a-link
+const MAX_URL_LEN = 23;
+
 async function doPost(config) {
     const { firebase, twitter } = config;
 
@@ -73,8 +76,8 @@ async function doX(post, maxPostLen, accessToken) {
 
     const link = `https://reddit.com${post.permalink}`;
 
-    if (post.title.length + link.length > maxPostLen) {
-        title = post.title.substring(0, Math.max(0, post.title.length - link.length - 4)) + ' ...';
+    if (post.title.length + MAX_URL_LEN > maxPostLen) {
+        title = post.title.substring(0, Math.max(0, post.title.length - MAX_URL_LEN - 4)) + ' ...';
     } else {
         title = post.title;
     }
