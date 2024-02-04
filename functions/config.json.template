@@ -12,8 +12,8 @@
     "reddit": {
         "subreddit": "",
         "maxPosts": 50,
-        "minUpvotes": 0,
         "minUpvoteRatio": 0.0,
+        "minUpvotes": 0,
         "clientId": "",
         "clientSecret": "",
         "refreshToken": ""
