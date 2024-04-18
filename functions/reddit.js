@@ -82,7 +82,7 @@ async function downloadPosts(cfg) {
             nid: post.data.name,
             title: post.data.title,
             created_at: post.data.created_utc,
-            author: post.data.author.name,
+            author: post.data.author,
             permalink: post.data.permalink,
             flair: post.data.link_flair_text,
             ups: post.data.ups,
