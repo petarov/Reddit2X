@@ -51,9 +51,7 @@ Create a new app and add the client id, key and refresh token to your `config.js
 
 See [reddit.com/wiki/api](https://www.reddit.com/wiki/api/) for more details.
 
-Use the [Reddit OAuth Helper](https://not-an-aardvark.github.io/reddit-oauth-helper/) to easily generate your refresh token.
-
-TODO: [Refresh tokens validity?](https://www.reddit.com/r/redditdev/comments/kvzaot/oauth2_api_changes_upcoming/)
+Use the [Reddit OAuth Helper](https://not-an-aardvark.github.io/reddit-oauth-helper/) to easily generate your refresh token. Set `read` as scope and tick the `Permanent` checkbox - only permanent tokens are currently supported.
 
 You can limit which posts are considered for posting and which not: `reddit.minUpvoteRatio` is checked first and then `reddit.minUpvotes`. Posts with insufficient upvote ratio or upvotes will be skipped.
 

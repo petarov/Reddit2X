@@ -14,8 +14,7 @@
         "maxPosts": 50,
         "minUpvoteRatio": 0.0,
         "minUpvotes": 0,
-        "clientId": "",
-        "clientSecret": "",
+        "accessToken": "",
         "refreshToken": ""
     },
     "twitter": {

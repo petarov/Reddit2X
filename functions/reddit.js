@@ -1,7 +1,7 @@
 const { logger } = require("firebase-functions");
 const { log } = require("firebase-functions/logger");
 const admin = require('firebase-admin');
-const Snoowrap = require('snoowrap');
+const axios = require('axios');
 const UserAgent = require('user-agents');
 
 admin.initializeApp();
@@ -38,15 +38,13 @@ async function updateDb(posts, cfg) {
 async function downloadPosts(cfg) {
     const { reddit } = cfg;
 
-    const snoowrap = new Snoowrap({
-        userAgent: new UserAgent({ platform: 'Win32' }).toString(),
-        clientId: reddit.clientId,
-        clientSecret: reddit.clientSecret,
-        refreshToken: reddit.refreshToken
-    });
+    const headers = {
+        Authorization: `Bearer ${reddit.accessToken}`,
+        'User-Agent': new UserAgent({ platform: 'Win32' }).toString(),
+    };
 
-    const posts = await snoowrap.getSubreddit(reddit.subreddit)
-        .getNew({ limit: reddit.maxPosts });
+    const response = await axios.get(`https://oauth.reddit.com/r/${reddit.subreddit}/new.json?limit=${reddit.maxPosts}`, { headers });
+    const posts = response.data.data.children;
 
     logger.info(`${posts.length} reddit posts fetched`);
 
@@ -68,6 +66,7 @@ async function downloadPosts(cfg) {
         //     return {};
         // }, []);
         .filter(post => {
+            post = post.data;
             if (post.upvote_ratio >= reddit.minUpvoteRatio) {
                 if (post.ups >= reddit.minUpvotes) {
                     return true;
@@ -80,13 +79,13 @@ async function downloadPosts(cfg) {
             return false;
         })
         .map(post => ({
-            nid: post.name,
-            title: post.title,
-            created_at: post.created_utc,
-            author: post.author.name,
-            permalink: post.permalink,
-            flair: post.link_flair_text,
-            ups: post.ups,
+            nid: post.data.name,
+            title: post.data.title,
+            created_at: post.data.created_utc,
+            author: post.data.author.name,
+            permalink: post.data.permalink,
+            flair: post.data.link_flair_text,
+            ups: post.data.ups,
             is_on_x: false,
         }));
 
