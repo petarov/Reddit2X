@@ -1,8 +1,7 @@
 Reddit2X
 ==========================
 
-Auto-syncs posts from a `Reddit` subreddit to `X (Twitter)` or _Xwitter_ using Firebase functions
-
+A set of cloud functions that help automate a synchronization workflow from `Reddit` to `X (Twitter)` or _Xwitter_. You can use this to have your subreddit posts automatically get posted to your Twitter profile.
 # How does it work?
 
 It uses `Firestore` and `Functions` to synchronize and publish posts on regular intervals.
