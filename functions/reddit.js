@@ -2,7 +2,6 @@ const { logger } = require("firebase-functions");
 const { log } = require("firebase-functions/logger");
 const admin = require('firebase-admin');
 const axios = require('axios');
-const UserAgent = require('user-agents');
 
 admin.initializeApp();
 
@@ -40,7 +39,7 @@ async function downloadPosts(cfg) {
 
     const headers = {
         Authorization: `Bearer ${reddit.accessToken}`,
-        'User-Agent': new UserAgent({ platform: 'Win32' }).toString(),
+        'User-Agent': reddit.userAgent
     };
 
     const response = await axios.get(`https://oauth.reddit.com/r/${reddit.subreddit}/new.json?limit=${reddit.maxPosts}`, { headers });

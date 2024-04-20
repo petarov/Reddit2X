@@ -14,6 +14,7 @@
         "maxPosts": 50,
         "minUpvoteRatio": 0.0,
         "minUpvotes": 0,
+        "userAgent": "<platform>:<app ID>:<version string> (by /u/<reddit username>)",
         "accessToken": "",
         "refreshToken": ""
     },
