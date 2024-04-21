@@ -1,7 +1,8 @@
 Reddit2X
 ==========================
 
-A set of cloud functions that help automate a synchronization workflow from `Reddit` to `X (Twitter)` or _Xwitter_. You can use this to have your subreddit posts automatically get posted to your Twitter profile.
+A set of cloud functions that help automate a synchronization workflow from `Reddit` to `X (Twitter)` or _Xwitter_. You can use this to have a subreddit's posts automatically get posted to your Xwitter profile.
+
 # How does it work?
 
 It uses `Firestore` and `Functions` to synchronize and publish posts on regular intervals.
@@ -46,11 +47,9 @@ Posts that are cleaned up from Firebase will be recongnized as new the next time
 
 ## Reddit
 
-Create a new app and add the client id, key and refresh token to your `config.json`.
+Create a new Reddit app and add `reddit.clientId`, `reddit.clientSecret` and `reddit.userAgent` to your `config.json` file. A Reddit access token will be created automatically and renewed every 24 hours.
 
 See [Reddit Data API Wiki](https://support.reddithelp.com/hc/en-us/articles/16160319875092-Reddit-Data-API-Wiki) for more details.
-
-Use the [Reddit OAuth Helper](https://not-an-aardvark.github.io/reddit-oauth-helper/) to easily generate your refresh token. Set `read` as scope and tick the `Permanent` checkbox - only permanent tokens are currently supported. Make sure `reddit.userAgent` is filled in correctly, because Reddit are very strict about that.
 
 You can limit which posts are considered for posting and which not: `reddit.minUpvoteRatio` is checked first and then `reddit.minUpvotes`. Posts with insufficient upvote ratio or upvotes will be skipped.
 

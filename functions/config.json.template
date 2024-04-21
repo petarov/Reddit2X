@@ -15,8 +15,11 @@
         "minUpvoteRatio": 0.0,
         "minUpvotes": 0,
         "userAgent": "<platform>:<app ID>:<version string> (by /u/<reddit username>)",
+        "clientId": "",
+        "clientSecret": "",
         "accessToken": "",
-        "refreshToken": ""
+        "accessTokenCreateTime": 0,
+        "accessTokenExpiresIn": 0
     },
     "twitter": {
         "maxPostLen": 140,
