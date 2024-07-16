@@ -1,7 +1,7 @@
 {
     "cron": {
         "x": "*/30 * * * *",
-        "reddit": "0 */1 * * *",
+        "reddit": "0 * * * *",
         "cleanup": "0 0 * * 0"
     },
     "firebase": {
